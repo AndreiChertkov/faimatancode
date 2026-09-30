@@ -1,24 +1,21 @@
 from math import comb
-
 import matplotlib.pyplot as plt
-
 
 def p_true(n, p):
     """
-    Вероятность правильного ответа ансамбля из n классификаторов
-    при голосовании большинством (n нечётно, ничьей нет).
+    Вероятность правильного ответа ансамбля из n (n нечётно)
+    классификаторов при голосовании большинством (ничьей нет).
     """
     # TODO: реализуйте по формуле из пункта 3.
     pass
 
-
 def check_total_probability(n, p):
     """
-    Проверка, что сумма вероятностей P(K=k) для k=0,...,n равна 1.
+    Проверка, что сумма вероятностей
+    P(K=k) для k=0,...,n равна 1.
     """
     # TODO: реализуйте проверку по формуле биномиального распределения.
     pass
-
 
 for n in [1, 3, 5, 11, 21]:
     print(n, check_total_probability(n, 0.6))
@@ -36,6 +33,6 @@ plt.figure(figsize=(8, 5))
 plt.plot(n_values, probabilities)
 plt.xlabel("n")
 plt.ylabel("P_true(n, p)")
-plt.title("Probability of correct ensemble answer when p > 0.5")
+plt.title("Prob. of correct ensemble answer when p > 0.5")
 plt.grid(True)
 plt.show()
