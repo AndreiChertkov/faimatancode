@@ -2,25 +2,24 @@ import matplotlib.pyplot as plt
 import numpy as np
 from sklearn.linear_model import LinearRegression
 
-
 # ============================================================
-# 1. Black boxes
+# 1. Чёрные ящики
 # ============================================================
 
 def make_black_boxes():
     """
-    Creates black boxes for the experiment.
+    Создаёт чёрные ящики для эксперимента.
 
-    Hidden true boundaries:
-    L_TRUE and R_TRUE are not returned.
-    Students should not use them in the algorithm.
+    Границы скрыты; L_TRUE и R_TRUE не возвращаются
+    и не должны использоваться в алгоритме.
     """
 
     L_TRUE = -0.35
     R_TRUE = 1.20
 
-    # We train a very simple sklearn model that returns the first coordinate.
-    # The object has the form x = [target_score, side].
+    # Обучаем простую модель sklearn,
+    # возвращающую первую координату.
+    # Объект имеет вид x = [target_score, side].
     rng = np.random.default_rng(42)
 
     target_scores = rng.uniform(-3.0, 3.0, size=1000)
@@ -34,29 +33,29 @@ def make_black_boxes():
 
     def make_probe(q, side):
         """
-        Creates a probe object.
+        Создаёт зондирующий объект.
 
-        q    -- desired score;
-        side -- 0 for probing the right boundary of class 0;
-                1 for probing the left boundary of class 1.
+        q    -- желаемая числовая оценка;
+        side -- 0 для поиска правой границы класса 0;
+                1 для поиска левой границы класса 1.
         """
         return np.array([[q, side]], dtype=float)
 
     def score_box(x):
-        """Black box returning S(x)."""
+        """Чёрный ящик, возвращающий числовую оценку S(x)."""
         return float(score_model.predict(x)[0])
 
     def label_box(x):
         """
-        Black box returning Y(x).
+        Чёрный ящик, возвращающий класс Y(x).
 
-        For side = 0:
-            y = 0 for scores <= L_TRUE,
-            y = 1 for scores >  L_TRUE.
+        Для side = 0:
+            класс 0, если оценка <= L_TRUE;
+            класс 1, если оценка > L_TRUE.
 
-        For side = 1:
-            y = 0 for scores <  R_TRUE,
-            y = 1 for scores >= R_TRUE.
+        Для side = 1:
+            класс 0, если оценка < R_TRUE;
+            класс 1, если оценка >= R_TRUE.
         """
         s = score_box(x)
         side = int(round(x[0, 1]))
@@ -67,21 +66,19 @@ def make_black_boxes():
         if side == 1:
             return int(s >= R_TRUE)
 
-        raise ValueError("side must be 0 or 1")
+        raise ValueError("Параметр side должен быть 0 или 1")
 
     return make_probe, score_box, label_box
 
-
 make_probe, score_box, label_box = make_black_boxes()
 
-
 # ============================================================
-# 2. TODO: implement bisection
+# 2. Задание: реализовать метод половинного деления
 # ============================================================
 
 def bisect_boundary(make_probe, label_box, side, left, right, epsilon):
     """
-    Finds a boundary by bisection.
+    Находит границу методом половинного деления.
 
     Параметры:
     make_probe -- функция создания probe-объектов;
@@ -114,9 +111,8 @@ def bisect_boundary(make_probe, label_box, side, left, right, epsilon):
 
     pass
 
-
 # ============================================================
-# 3. Run the algorithm
+# 3. Запуск алгоритма
 # ============================================================
 
 epsilon = 1e-3
@@ -139,12 +135,11 @@ R_star, R_interval, R_history = bisect_boundary(
     epsilon=epsilon,
 )
 
-print("Approximation of L:", L_star)
-print("Final interval for L:", L_interval)
-
+print("Приближение границы L:", L_star)
+print("Финальный отрезок для L:", L_interval)
 print()
-print("Approximation of R:", R_star)
-print("Final interval for R:", R_interval)
+print("Приближение границы R:", R_star)
+print("Финальный отрезок для R:", R_interval)
 
 L_upper = L_interval[1]
 R_lower = R_interval[0]
@@ -152,14 +147,13 @@ R_lower = R_interval[0]
 if L_upper < R_lower:
     threshold = 0.5 * (L_upper + R_lower)
     print()
-    print("Certified separating threshold:", threshold)
+    print("Гарантированно разделяющий порог:", threshold)
 else:
     threshold = 0.5 * (L_star + R_star)
     print()
-    print("Intervals still overlap.")
-    print("Try a smaller epsilon.")
-    print("Candidate threshold:", threshold)
-
+    print("Отрезки пока перекрываются.")
+    print("Попробуйте уменьшить epsilon.")
+    print("Предполагаемый разделяющий порог:", threshold)
 
 # ============================================================
 # 4. Plot interval lengths
@@ -169,29 +163,28 @@ L_lengths = [b - a for a, b in L_history]
 R_lengths = [b - a for a, b in R_history]
 
 plt.figure(figsize=(8, 5))
-plt.semilogy(L_lengths, label="interval for L")
-plt.semilogy(R_lengths, label="interval for R")
-plt.xlabel("iteration")
-plt.ylabel("interval length")
-plt.title("Nested intervals shrink by bisection")
+plt.semilogy(L_lengths, label="отрезок для L")
+plt.semilogy(R_lengths, label="отрезок для R")
+plt.xlabel("Номер итерации")
+plt.ylabel("Длина отрезка")
+plt.title("Вложенные отрезки при половинном делении")
 plt.legend()
 plt.grid(True)
 plt.show()
 
-
 # ============================================================
-# 5. Plot final localization on the score line
+# 5. Финальная локализация на прямой числовых оценок
 # ============================================================
 
 plt.figure(figsize=(9, 2))
-
-plt.axvspan(L_interval[0], L_interval[1], alpha=0.3, label="final interval for L")
-plt.axvspan(R_interval[0], R_interval[1], alpha=0.3, label="final interval for R")
-plt.axvline(threshold, linestyle="--", label="threshold")
-
+plt.axvspan(L_interval[0], L_interval[1], alpha=0.3,
+    label="финальный отрезок для L")
+plt.axvspan(R_interval[0], R_interval[1], alpha=0.3,
+    label="финальный отрезок для R")
+plt.axvline(threshold, linestyle="--", label="порог")
 plt.yticks([])
-plt.xlabel("score")
-plt.title("Localization of the unknown separating boundaries")
+plt.xlabel("Числовая оценка")
+plt.title("Локализация неизвестных границ разделения")
 plt.legend()
 plt.grid(True)
 plt.show()
