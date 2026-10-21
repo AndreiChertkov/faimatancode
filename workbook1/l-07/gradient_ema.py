@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ============================================================
-# 1. Data generation
+# 1. Генерация данных
 # ============================================================
 
 rng = np.random.default_rng(42)
@@ -17,22 +17,19 @@ gradients = rng.normal(loc=mean, scale=std, size=N)
 
 honest_mean = np.mean(gradients)
 
-print("Gradients:")
-print(gradients)
+print("Градиенты:\n", gradients)
 
 print()
-print("Honest full mean:")
-print(honest_mean)
-
+print("Честное полное среднее:\n", honest_mean)
 
 # ============================================================
-# 2. TODO: implement EMA over epochs
+# 2. TODO: реализовать EMA по эпохам
 # ============================================================
 
 def run_ema_epochs(values, beta, epochs):
     """
-    Запускает EMA по одному и тому же конечному набору градиентов
-    на протяжении нескольких эпох.
+    Запускает EMA по одному и тому же конечному набору
+    градиентов на протяжении нескольких эпох.
 
     Параметры:
     values -- массив градиентов G_1, ..., G_N;
@@ -53,9 +50,8 @@ def run_ema_epochs(values, beta, epochs):
 
     pass
 
-
 # ============================================================
-# 3. Run experiment
+# 3. Запуск эксперимента
 # ============================================================
 
 betas = [0.1, 0.9, 0.99]
@@ -74,27 +70,22 @@ for beta in betas:
 
     errors = np.abs(x_values - honest_mean)
 
-    plt.plot(
-        epoch_numbers,
-        errors,
-        label=f"beta={beta}",
-    )
+    plt.plot(epoch_numbers, errors, label=f"beta={beta}")
 
     print()
     print("beta =", beta)
-    print("Final EMA value:", x_values[-1])
-    print("Final absolute error:", errors[-1])
+    print("Финальное значение EMA:", x_values[-1])
+    print("Финальная абсолютная ошибка:", errors[-1])
 
-plt.xlabel("epoch s")
+plt.xlabel("Эпоха s")
 plt.ylabel("|x_s - honest_mean|")
-plt.title("EMA end-of-epoch error")
+plt.title("Ошибка EMA в конце эпохи")
 plt.legend()
 plt.grid(True)
 plt.show()
 
-
 # ============================================================
-# 4. Optional: plot on logarithmic y-scale
+# 4. Опционально: построить график с лог. шкалой по оси y
 # ============================================================
 
 plt.figure(figsize=(9, 5))
@@ -108,15 +99,11 @@ for beta in betas:
 
     errors = np.abs(x_values - honest_mean)
 
-    plt.semilogy(
-        epoch_numbers,
-        errors,
-        label=f"beta={beta}",
-    )
+    plt.semilogy(epoch_numbers, errors, label=f"beta={beta}")
 
-plt.xlabel("epoch s")
+plt.xlabel("Эпоха s")
 plt.ylabel("|x_s - honest_mean|")
-plt.title("EMA end-of-epoch error, logarithmic scale")
+plt.title("Ошибка EMA в конце эпохи лог. масштаб")
 plt.legend()
 plt.grid(True)
 plt.show()
