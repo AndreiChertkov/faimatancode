@@ -2,12 +2,12 @@ import matplotlib.pyplot as plt
 import numpy as np
 
 # ============================================================
-# 1. TODO: implement GDA
+# 1. TODO: реализовать метод GDA
 # ============================================================
 
 def run_gda(x0, y0, eta, steps):
     """
-    Gradient Descent/Ascent для f(x, y) = xy.
+    Метод градиентного спуска-подъёма для f(x, y) = xy.
 
     Правило обновления:
         x_{n+1} = x_n - eta * y_n
@@ -19,9 +19,8 @@ def run_gda(x0, y0, eta, steps):
     # TODO: реализуйте функцию
     pass
 
-
 # ============================================================
-# 2. TODO: implement simplified OGDA
+# 2. TODO: реализовать экстраградиентный метод
 # ============================================================
 
 def run_simplified_ogda(x0, y0, eta, steps):
@@ -38,9 +37,8 @@ def run_simplified_ogda(x0, y0, eta, steps):
     # TODO: реализуйте функцию
     pass
 
-
 # ============================================================
-# 3. TODO: distance to equilibrium
+# 3. TODO: вычислить расстояния до равновесия
 # ============================================================
 
 def distances_to_zero(points):
@@ -48,9 +46,8 @@ def distances_to_zero(points):
     # TODO: реализуйте функцию
     pass
 
-
 # ============================================================
-# 4. TODO: numerical Cauchy check
+# 4. TODO: реализовать проверку конечных хвостов
 # ============================================================
 
 def tail_diameter(points, start_index):
@@ -63,7 +60,6 @@ def tail_diameter(points, start_index):
     """
     # TODO: реализуйте функцию
     pass
-
 
 def find_cauchy_start(points, epsilon, min_tail_length=20):
     """
@@ -79,9 +75,8 @@ def find_cauchy_start(points, epsilon, min_tail_length=20):
     # TODO: реализуйте функцию
     pass
 
-
 # ============================================================
-# 5. Run experiment
+# 5. Запуск эксперимента
 # ============================================================
 
 x0 = 1.0
@@ -109,9 +104,8 @@ points_ogda = run_simplified_ogda(
 r_gda = distances_to_zero(points_gda)
 r_ogda = distances_to_zero(points_ogda)
 
-
 # ============================================================
-# 6. Cauchy check
+# 6. Проверка близости точек конечного хвоста
 # ============================================================
 
 epsilon = 1e-3
@@ -136,9 +130,8 @@ print()
 print("Final GDA distance:", r_gda[-1])
 print("Final simplified OGDA distance:", r_ogda[-1])
 
-
 # ============================================================
-# 7. Plot distances r_n
+# 7. Графики расстояний до равновесия
 # ============================================================
 
 n = np.arange(steps + 1)
@@ -153,14 +146,15 @@ plt.legend()
 plt.grid(True)
 plt.show()
 
-
 # ============================================================
-# 8. Plot trajectories
+# 8. Траектории на плоскости
 # ============================================================
 
 plt.figure(figsize=(6, 6))
-plt.plot(points_gda[:, 0], points_gda[:, 1], marker="o", markersize=3, label="GDA")
-plt.plot(points_ogda[:, 0], points_ogda[:, 1], marker="o", markersize=3, label="Simplified OGDA")
+plt.plot(points_gda[:, 0], points_gda[:, 1],
+    marker="o", markersize=3, label="GDA")
+plt.plot(points_ogda[:, 0], points_ogda[:, 1],
+    marker="o", markersize=3, label="Simplified OGDA")
 plt.scatter([0], [0], s=80, label="equilibrium")
 plt.xlabel("x")
 plt.ylabel("y")
@@ -170,9 +164,8 @@ plt.grid(True)
 plt.axis("equal")
 plt.show()
 
-
 # ============================================================
-# 9. Optional: tail diameters
+# 9. Дополнительно: диаметры конечных хвостов
 # ============================================================
 
 tail_starts = np.arange(0, steps - 20)
